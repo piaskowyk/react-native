@@ -21,6 +21,8 @@ const flattenStyle = require('../StyleSheet/flattenStyle');
 const infoLog = require('../Utilities/infoLog');
 const invariant = require('invariant');
 
+const Reanimated = require('../../../react-native-reaniamted/lib/Animated').default;
+
 import {
   keyExtractor as defaultKeyExtractor,
   computeWindowedRenderLimits,
@@ -2070,10 +2072,10 @@ class CellRenderer extends React.Component<
       /* $FlowFixMe[incompatible-type-arg] (>=0.89.0 site=react_native_fb) *
         This comment suppresses an error found when Flow v0.89 was deployed. *
         To see the error, delete this comment and run Flow. */
-      <View style={cellStyle} onLayout={onLayout}>
+      <Reanimated.View layout={element.props.layout} style={cellStyle} onLayout={onLayout}>
         {element}
         {itemSeparator}
-      </View>
+      </Reanimated.View>
     ) : (
       <CellRendererComponent
         {...this.props}
