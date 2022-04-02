@@ -376,6 +376,10 @@ ContextContainer::Shared Scheduler::getContextContainer() const {
   return contextContainer_;
 }
 
+std::shared_ptr<UIManager> Scheduler::getUIManager() const {
+  return uiManager_;
+}
+
 void Scheduler::addEventListener(
     const std::shared_ptr<EventListener const> &listener) {
   eventListeners_.addListener(listener);
