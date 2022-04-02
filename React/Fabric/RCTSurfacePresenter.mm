@@ -117,7 +117,7 @@ static BackgroundExecutor RCTGetBackgroundExecutor()
   return _mountingManager;
 }
 
-- (RCTScheduler *_Nullable)_scheduler
+- (RCTScheduler *_Nullable)scheduler
 {
   std::lock_guard<std::mutex> lock(_schedulerAccessMutex);
   return _scheduler;
@@ -153,7 +153,7 @@ static BackgroundExecutor RCTGetBackgroundExecutor()
 - (void)registerSurface:(RCTFabricSurface *)surface
 {
   [_surfaceRegistry registerSurface:surface];
-  RCTScheduler *scheduler = [self _scheduler];
+  RCTScheduler *scheduler = [self scheduler];
   if (scheduler) {
     [scheduler registerSurface:surface.surfaceHandler];
   }
@@ -161,7 +161,7 @@ static BackgroundExecutor RCTGetBackgroundExecutor()
 
 - (void)unregisterSurface:(RCTFabricSurface *)surface
 {
-  RCTScheduler *scheduler = [self _scheduler];
+  RCTScheduler *scheduler = [self scheduler];
   if (scheduler) {
     [scheduler unregisterSurface:surface.surfaceHandler];
   }
@@ -190,7 +190,7 @@ static BackgroundExecutor RCTGetBackgroundExecutor()
 
 - (BOOL)synchronouslyUpdateViewOnUIThread:(NSNumber *)reactTag props:(NSDictionary *)props
 {
-  RCTScheduler *scheduler = [self _scheduler];
+  RCTScheduler *scheduler = [self scheduler];
   if (!scheduler) {
     return NO;
   }
@@ -214,7 +214,7 @@ static BackgroundExecutor RCTGetBackgroundExecutor()
 
 - (void)setupAnimationDriverWithSurfaceHandler:(facebook::react::SurfaceHandler const &)surfaceHandler
 {
-  [[self _scheduler] setupAnimationDriver:surfaceHandler];
+  [[self scheduler] setupAnimationDriver:surfaceHandler];
 }
 
 - (BOOL)suspend
