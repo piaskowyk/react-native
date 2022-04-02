@@ -65,18 +65,26 @@ Scheduler::Scheduler(
       ? weakRuntimeScheduler.value().lock()
       : nullptr;
 
-  auto eventPipe = [uiManager, runtimeScheduler = runtimeScheduler.get()](
+  auto eventPipe = [uiManager,
+                    runtimeScheduler = runtimeScheduler.get(),
+                    &eventListeners_ = eventListeners_](
                        jsi::Runtime &runtime,
                        const EventTarget *eventTarget,
                        const std::string &type,
                        ReactEventPriority priority,
                        const ValueFactory &payloadFactory) {
-    uiManager->visitBinding(
-        [&](UIManagerBinding const &uiManagerBinding) {
-          uiManagerBinding.dispatchEvent(
-              runtime, eventTarget, type, priority, payloadFactory);
-        },
-        runtime);
+    auto eventIntercepted = eventListeners_.willDispatchEvent(
+        eventTarget, type, priority, payloadFactory);
+
+    // Allows event listeners to intercept the event, skipping default handling
+    if (!eventIntercepted) {
+      uiManager->visitBinding(
+          [&](UIManagerBinding const &uiManagerBinding) {
+            uiManagerBinding.dispatchEvent(
+                runtime, eventTarget, type, priority, payloadFactory);
+          },
+          runtime);
+    }
     if (runtimeScheduler) {
       runtimeScheduler->callExpiredTasks(runtime);
     }
@@ -366,6 +374,16 @@ void Scheduler::uiManagerDidSetIsJSResponder(
 
 ContextContainer::Shared Scheduler::getContextContainer() const {
   return contextContainer_;
+}
+
+void Scheduler::addEventListener(
+    const std::shared_ptr<EventListener const> &listener) {
+  eventListeners_.addListener(listener);
+}
+
+void Scheduler::removeEventListener(
+    const std::shared_ptr<EventListener const> &listener) {
+  eventListeners_.removeListener(listener);
 }
 
 } // namespace react
