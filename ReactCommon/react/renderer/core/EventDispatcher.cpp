@@ -62,5 +62,15 @@ const EventQueue &EventDispatcher::getEventQueue(EventPriority priority) const {
   }
 }
 
+void EventDispatcher::addListener(
+    const std::shared_ptr<EventListener const> &listener) const {
+  eventListeners_.addListener(listener);
+}
+
+void EventDispatcher::removeListener(
+    const std::shared_ptr<EventListener const> &listener) const {
+  eventListeners_.removeListener(listener);
+}
+
 } // namespace react
 } // namespace facebook

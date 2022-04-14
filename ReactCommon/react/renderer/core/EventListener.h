@@ -12,6 +12,7 @@
 #include <react/renderer/core/EventTarget.h>
 #include <react/renderer/core/ReactEventPriority.h>
 #include <react/renderer/core/ValueFactory.h>
+#include <react/renderer/core/RawEvent.h>
 
 #include <butter/mutex.h>
 
@@ -31,17 +32,13 @@ using EventListener = std::function<bool(
 
 class EventListenerHolder {
  public:
-  bool willDispatchEvent(
-      const EventTarget *eventTarget,
-      const std::string &type,
-      ReactEventPriority priority,
-      const ValueFactory &payloadFactory);
+  bool willProcessEvent(RawEvent &&rawEvent, EventPriority priority);
 
   void addListener(const std::shared_ptr<EventListener const> &listener);
   void removeListener(const std::shared_ptr<EventListener const> &listener);
 
  private:
-  butter::shared_mutex mutex_;
+  mutable butter::shared_mutex mutex_;
   std::vector<std::shared_ptr<EventListener const>> eventListeners_;
 };
 

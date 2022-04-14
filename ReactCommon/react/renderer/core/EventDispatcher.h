@@ -13,6 +13,7 @@
 #include <react/renderer/core/EventQueueProcessor.h>
 #include <react/renderer/core/StateUpdate.h>
 #include <react/renderer/core/UnbatchedEventQueue.h>
+#include <react/renderer/core/EventListener.h>
 
 namespace facebook {
 namespace react {
@@ -52,6 +53,10 @@ class EventDispatcher {
   void dispatchStateUpdate(StateUpdate &&stateUpdate, EventPriority priority)
       const;
 
+#pragma mark - Event listeners
+  void addListener(const std::shared_ptr<EventListener const> &listener) const;
+  void removeListener(const std::shared_ptr<EventListener const> &listener) const;
+
  private:
   EventQueue const &getEventQueue(EventPriority priority) const;
 
@@ -59,6 +64,8 @@ class EventDispatcher {
   std::unique_ptr<BatchedEventQueue> synchronousBatchedQueue_;
   std::unique_ptr<UnbatchedEventQueue> asynchronousUnbatchedQueue_;
   std::unique_ptr<BatchedEventQueue> asynchronousBatchedQueue_;
+
+  mutable EventListenerHolder eventListeners_;
 };
 
 } // namespace react

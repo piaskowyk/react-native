@@ -9,14 +9,13 @@
 
 namespace facebook::react {
 
-bool EventListenerHolder::willDispatchEvent(
-    const EventTarget *eventTarget,
-    const std::string &type,
-    ReactEventPriority priority,
-    const ValueFactory &payloadFactory) {
+bool EventListenerHolder::willProcessEvent(RawEvent &&rawEvent, EventPriority priority) const {
   std::shared_lock<butter::shared_mutex> lock(mutex_);
 
   bool handled = false;
+  const EventTarget *eventTarget = rawEvent.eventTarget.get();
+  const std::string &type = rawEvent.type;
+  const ValueFactory &payloadFactory = rawEvent.payloadFactory;
   for (auto const &listener : eventListeners_) {
     handled = handled ||
         listener->operator()(eventTarget, type, priority, payloadFactory);
