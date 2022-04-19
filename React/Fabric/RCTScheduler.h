@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface RCTScheduler : NSObject
 
 @property (atomic, weak, nullable) id<RCTSchedulerDelegate> delegate;
-@property (readonly, nullable) facebook::react::UIManager const *uiManager;
+@property (readonly) std::shared_ptr<facebook::react::UIManager> uiManager;
 
 - (instancetype)initWithToolbox:(facebook::react::SchedulerToolbox)toolbox;
 

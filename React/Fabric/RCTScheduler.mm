@@ -203,9 +203,9 @@ class LayoutAnimationDelegateProxy : public LayoutAnimationStatusDelegate, publi
   return _scheduler->removeEventListener(listener);
 }
 
-- (facebook::react::UIManager const *)uiManager
+- (std::shared_ptr<facebook::react::UIManager>)uiManager
 {
-  return _scheduler->getUIManager().get();
+  return _scheduler->getUIManager();
 }
 
 @end

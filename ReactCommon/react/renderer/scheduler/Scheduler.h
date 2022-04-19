@@ -127,8 +127,6 @@ class Scheduler final : public UIManagerDelegate {
 
   std::vector<std::shared_ptr<UIManagerCommitHook const>> commitHooks_;
 
-  EventListenerHolder eventListeners_;
-
   /*
    * At some point, we have to have an owning shared pointer to something that
    * will become an `EventDispatcher` a moment later. That's why we have it as a
