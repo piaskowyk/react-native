@@ -81,6 +81,12 @@ class UIManager final : public ShadowTreeDelegate {
   void registerCommitHook(UIManagerCommitHook const &commitHook) const;
   void unregisterCommitHook(UIManagerCommitHook const &commitHook) const;
 
+  /*
+   * Registers and unregisters a surfaceWillStart hook.
+   */
+  void registerSurfaceWillStartHook(const std::shared_ptr<SurfaceWillStartHook const> &hook);
+  void unregisterSurfaceWillStartHook(const std::shared_ptr<SurfaceWillStartHook const> &hook);
+
   ShadowNode::Shared getNewestCloneOfShadowNode(
       ShadowNode const &shadowNode) const;
 

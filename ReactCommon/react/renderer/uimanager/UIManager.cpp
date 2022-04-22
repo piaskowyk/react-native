@@ -178,6 +178,9 @@ void UIManager::startSurface(
 
   runtimeExecutor_([=](jsi::Runtime &runtime) {
     SystraceSection s("UIManager::startSurface::onRuntime");
+    for (auto const &surfaceWillStartHook : surfaceWillStartHooks_) {
+      surfaceWillStartHook->operator()();
+    }
     SurfaceRegistryBinding::startSurface(
         runtime, surfaceId, moduleName, props, displayMode);
   });
@@ -400,6 +403,19 @@ void UIManager::unregisterCommitHook(
   react_native_assert(iterator != commitHooks_.end());
   commitHooks_.erase(iterator);
   commitHook.commitHookWasUnregistered(*this);
+}
+
+void UIManager::registerSurfaceWillStartHook(
+  const std::shared_ptr<SurfaceWillStartHook const> &hook) {
+  surfaceWillStartHooks_.push_back(hook);
+}
+
+void UIManager::unregisterSurfaceWillStartHook(
+  const std::shared_ptr<SurfaceWillStartHook const> &hook) {
+  auto it = std::find(surfaceWillStartHooks_.begin(), surfaceWillStartHooks_.end(), hook);
+  if (it != surfaceWillStartHooks_.end()) {
+    surfaceWillStartHooks_.erase(it);
+  }
 }
 
 #pragma mark - ShadowTreeDelegate
